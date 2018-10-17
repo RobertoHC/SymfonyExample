@@ -28,6 +28,11 @@ class Contact
     private $surname;
 
     /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $number;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User")
      */
     private $user;
@@ -62,5 +67,13 @@ class Contact
 
     public function setUser($user){
         $this->user = $user;
+    }
+
+    public function getNumber(){
+        return $this->number;
+    }
+
+    public function setNumber($number){
+        $this->number = $number;
     }
 }

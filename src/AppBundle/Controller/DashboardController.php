@@ -47,6 +47,7 @@ class DashboardController extends Controller
         $arrayi = array();
         $array = array();
         $count = 0;
+        $fullword = "";
         foreach ($texts as $text) {
             $count = $count + 1;
             if($count <= 4){
@@ -57,13 +58,29 @@ class DashboardController extends Controller
             //foreach ($text as $word){
             //    print($word . PHP_EOL);
             //}
-            $arrayi[$i] = $text->getDescription();
-            if($i == 2){
-                $array[] = $arrayi;
-                $arrayi = array();
+            $word = $text->getDescription();
+
+            if (preg_match("/^[a-zA-Z]$/", $word[0])){
+                $fullword = $fullword.$word." ";
+
+            }
+            else{
+                if($fullword != ""){
+                    $arrayi[$i] = $fullword;
+                    $i = $i + 1;
+                }
+
+                $arrayi[$i] = $word;
+                $fullword = "";
+
+                if($i == 2){
+                    $array[] = $arrayi;
+                    $arrayi = array();
+                }
+
+                $i = ($i + 1) % 3;
             }
 
-            $i = ($i + 1) % 3;
             # get bounds
             //$vertices = $text->getBoundingPoly()->getVertices();
             //$bounds = [];
@@ -73,7 +90,7 @@ class DashboardController extends Controller
             //print('Bounds: ' . join(', ',$bounds) . PHP_EOL);
         }
 
-        var_dump($array);
+        //var_dump($array);
 
         $imageAnnotator->close();
 
@@ -97,7 +114,7 @@ class DashboardController extends Controller
             $contact = new Contact();
             $contact->setName($array[$i][0]);
             $contact->setSurname($array[$i][1]);
-            $contact->setUser($array[$i][2]);
+            $contact->setNumber($array[$i][2]);
             $contacts[] = $contact;
         }
 
